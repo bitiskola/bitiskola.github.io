@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>KRETÉN - Admin Panel</title>
+    <link rel="stylesheet" href="https://e-kreten.github.io/src/404_style.css">
+    <script>
+        function backtosigning () {
+            window.location.href = 'https://e-kreten.github.io/'; 
+        }
+        </script>
+</head>
+<body>
+    <div class="logo-header">
+        <img src="https://e-kreten.github.io/src/logo.png" alt="KRETÉN Logo">
+      </div>
+        <div class="container">
+            <div class="header" id="title">
+                néccánégy nem található
+            </div>
+            <div class="content">
+            <p class="redtext" id="errmsg">A keresett oldal (/) már nem található meg a rendszerben.</p>
+            <p class="bold">Lehetséges okok:</p>
+            &nbsp;&nbsp;•&nbsp;&nbsp; Az admin már letörölte az egész adatbázist (legvalószínűbb)<br>
+            &nbsp;&nbsp;•&nbsp;&nbsp; Róbert'); DROP TABLE Pages;-- megint SQL injectiont használt<br>
+            &nbsp;&nbsp;•&nbsp;&nbsp; Az api-t megint megváltozatták és ez az oldal még nem használja az új api-t<br>
+            &nbsp;&nbsp;•&nbsp;&nbsp; Az oldal sosem létezett, csak képzelted<br>
+            &nbsp;&nbsp;•&nbsp;&nbsp; Ha nem megy hát nem megy<br>
+            &nbsp;&nbsp;•&nbsp;&nbsp; :3<br>
+           <div class="content2"> 
+            </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <footer>
+            <p>
+                <a href="https://github.com/e-kreten/e-kreten.github.io/" class="hyperlink">Az oldal forráskódja</a> &nbsp;&nbsp;•&nbsp;&nbsp;
+                Készült 🍊 megbízásából, 12 Mrd ft közpénzből
+            </p>
+        </footer>
+    </div>
+    <script>
+        const path = window.location.pathname;
+        document.getElementById("errmsg").innerText = `A keresett oldal (${path}) már nem található meg a rendszerben.`;
+   </script>
+</body>
+</html>
