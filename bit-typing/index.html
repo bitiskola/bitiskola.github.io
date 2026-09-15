@@ -24,6 +24,8 @@
       --accent-soft: rgba(91, 141, 239, 0.15);
       --accent-hover: #7aa3f5;
       --success: #3ecf8e;
+      --warning: #f5a524;
+      --warning-soft: rgba(245, 165, 36, 0.12);
       --radius: 14px;
       --radius-sm: 10px;
       --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
@@ -49,7 +51,10 @@
       overflow-x: hidden;
     }
 
-    /* Subtle grid background */
+    body.modal-open {
+      overflow: hidden;
+    }
+
     body::before {
       content: '';
       position: fixed;
@@ -70,7 +75,6 @@
       z-index: 1;
     }
 
-    /* Header */
     header {
       position: sticky;
       top: 0;
@@ -123,7 +127,6 @@
       background: var(--bg-hover);
     }
 
-    /* Hero */
     .hero {
       padding: 96px 0 72px;
       text-align: center;
@@ -186,6 +189,7 @@
       transition: all var(--transition);
       border: none;
       cursor: pointer;
+      font-family: inherit;
     }
 
     .btn-primary {
@@ -194,10 +198,17 @@
       box-shadow: 0 4px 20px rgba(91, 141, 239, 0.3);
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       background: var(--accent-hover);
       transform: translateY(-1px);
       box-shadow: 0 6px 24px rgba(91, 141, 239, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
     .btn-secondary {
@@ -211,12 +222,15 @@
       border-color: rgba(255,255,255,0.2);
     }
 
-    .btn-disabled {
-      background: var(--bg-card);
-      color: var(--text-muted);
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
       border: 1px solid var(--border);
-      cursor: not-allowed;
-      opacity: 0.7;
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-hover);
+      color: var(--text);
     }
 
     .btn svg {
@@ -231,7 +245,6 @@
       margin-top: 12px;
     }
 
-    /* Screenshots */
     .screenshots {
       padding: 24px 0 80px;
     }
@@ -273,7 +286,6 @@
       text-align: center;
     }
 
-    /* Features */
     .features {
       padding: 80px 0;
     }
@@ -333,7 +345,6 @@
       line-height: 1.65;
     }
 
-    /* Download section */
     .download {
       padding: 80px 0;
     }
@@ -359,10 +370,6 @@
     .download-card.available:hover {
       border-color: var(--accent);
       transform: translateY(-2px);
-    }
-
-    .download-card.coming-soon {
-      opacity: 0.65;
     }
 
     .download-header {
@@ -406,19 +413,6 @@
       margin-top: auto;
     }
 
-    .badge-soon {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: var(--bg-elevated);
-      padding: 3px 8px;
-      border-radius: 6px;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-    }
-
-    /* Team */
     .team {
       padding: 80px 0;
     }
@@ -465,7 +459,6 @@
       color: var(--text-secondary);
     }
 
-    /* Footer */
     footer {
       padding: 40px 0 48px;
       border-top: 1px solid var(--border);
@@ -496,7 +489,8 @@
 
     .footer-links {
       display: flex;
-      gap: 20px;
+      flex-wrap: wrap;
+      gap: 16px 20px;
     }
 
     .footer-links a {
@@ -510,7 +504,198 @@
       color: var(--text);
     }
 
-    /* Responsive */
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      padding: 24px 28px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-header h2 .warning-icon {
+      color: var(--warning);
+      flex-shrink: 0;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      transition: color var(--transition), background var(--transition);
+      line-height: 0;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+      background: var(--bg-hover);
+    }
+
+    .modal-close svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .modal-body {
+      padding: 20px 28px 28px;
+    }
+
+    .modal-warning-box {
+      background: var(--warning-soft);
+      border: 1px solid rgba(245, 165, 36, 0.25);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .modal-warning-box strong {
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .modal-body p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.65;
+    }
+
+    .modal-body p:last-of-type {
+      margin-bottom: 20px;
+    }
+
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-strong);
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      position: relative;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .checkbox-row input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .checkbox-row input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 6px;
+      height: 11px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .checkbox-row span {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .modal-actions .btn {
+      min-width: 140px;
+      justify-content: center;
+    }
+
     @media (max-width: 900px) {
       .screenshot-grid,
       .features-grid {
@@ -546,9 +731,26 @@
         flex-direction: column;
         text-align: center;
       }
+
+      .modal {
+        max-height: 95vh;
+      }
+
+      .modal-header,
+      .modal-body {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+
+      .modal-actions .btn {
+        width: 100%;
+      }
     }
 
-    /* OS-specific visibility handled by JS */
     .os-win-linux { display: none; }
     .os-macos { display: none; }
     body.show-win-linux .os-win-linux { display: block; }
@@ -590,13 +792,12 @@
             GitHub
           </a>
         </div>
-        <p class="platform-note">Windows & Linux and macOS avilable</p>
+        <p class="platform-note">Windows, Linux &amp; macOS available</p>
       </div>
     </section>
 
     <section class="screenshots">
       <div class="container">
-        <!-- Windows / Linux screenshots -->
         <div class="screenshot-grid os-win-linux">
           <div class="screenshot-card">
             <img src="https://bitiskola.github.io/bit-typing/src/screenshots/Screenshot_main.png" alt="Main screen" loading="lazy">
@@ -612,7 +813,6 @@
           </div>
         </div>
 
-        <!-- macOS screenshots -->
         <div class="screenshot-grid os-macos">
           <div class="screenshot-card">
             <img src="https://bitiskola.github.io/bit-typing/src/screenshots/Screenshot_main_macos.png" alt="Main screen (macOS)" loading="lazy">
@@ -691,36 +891,36 @@
             </a>
           </div>
 
-          <div class="download-card avilable">
+          <div class="download-card available">
             <div class="download-header">
               <div class="download-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.5 2.5-1.5 3.5L12 12l-2.5-2.5C8.5 8.5 8 7.5 8 6a4 4 0 0 1 4-4z"/><path d="M8 14c-2 1-3 3-3 5v1h14v-1c0-2-1-4-3-5"/><path d="M9 20v2"/><path d="M15 20v2"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1.5 0 2.5.5 3.5 1.5S17 7 17 9c0 2-1 3.5-2 4.5L12 17l-3-3.5C8 12.5 7 11 7 9c0-2 .5-3.5 1.5-4.5S10.5 3 12 3z"/><path d="M9 18h6"/><path d="M10 21h4"/></svg>
               </div>
               <div class="download-info">
                 <h3>macOS · Apple Silicon</h3>
                 <p>arm64 · .dmg</p>
               </div>
             </div>
-            <a href="https://github.com/bitiskola/bit-typing-swift/releases/download/v2.0.0/BIT.Typing-2.0.0-macOS-arm64.dmg" class="btn btn-primary">
+            <button type="button" class="btn btn-primary macos-download-btn" data-url="https://github.com/bitiskola/bit-typing-swift/releases/download/v2.0.0/BIT.Typing-2.0.0-macOS-arm64.dmg">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download for macOS (Apple Silicon)
-            </a>
+            </button>
           </div>
 
-          <div class="download-card avilable">
+          <div class="download-card available">
             <div class="download-header">
               <div class="download-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.5 2.5-1.5 3.5L12 12l-2.5-2.5C8.5 8.5 8 7.5 8 6a4 4 0 0 1 4-4z"/><path d="M8 14c-2 1-3 3-3 5v1h14v-1c0-2-1-4-3-5"/><path d="M9 20v2"/><path d="M15 20v2"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1.5 0 2.5.5 3.5 1.5S17 7 17 9c0 2-1 3.5-2 4.5L12 17l-3-3.5C8 12.5 7 11 7 9c0-2 .5-3.5 1.5-4.5S10.5 3 12 3z"/><path d="M9 18h6"/><path d="M10 21h4"/></svg>
               </div>
               <div class="download-info">
                 <h3>macOS · Intel</h3>
                 <p>x64 · .dmg</p>
               </div>
             </div>
-            <a href="https://github.com/bitiskola/bit-typing-swift/releases/download/v2.0.0/BIT.Typing-2.0.0-macOS-x86_64.dmg" class="btn btn-primary">
+            <button type="button" class="btn btn-primary macos-download-btn" data-url="https://github.com/bitiskola/bit-typing-swift/releases/download/v2.0.0/BIT.Typing-2.0.0-macOS-x86_64.dmg">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download for macOS (Intel)
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -735,14 +935,14 @@
             <img src="https://bitiskola.github.io/bit-typing/src/assets/micr0softstore.png" alt="micr0softstore">
             <div class="team-info">
               <h3>micr0softstore</h3>
-              <p>Lead developer · Windows & Linux</p>
+              <p>Lead developer · Windows &amp; Linux</p>
             </div>
           </div>
           <div class="team-card">
             <img src="https://bitiskola.github.io/bit-typing/src/assets/cacto.tsx.png" alt="cacto.tsx">
             <div class="team-info">
               <h3>cacto.tsx</h3>
-              <p>Icon designer & developer · macOS</p>
+              <p>Icon designer &amp; developer · macOS</p>
             </div>
           </div>
         </div>
@@ -757,33 +957,133 @@
         <span>BIT Typing · v2.0.0</span>
       </div>
       <div class="footer-links">
-        <a href="https://github.com/bitiskola/bit-typing-rust" target="_blank" rel="noopener">GitHub - Rust</a>
-        <a href="https://github.com/bitiskola/bit-typing-swift" target="_blank" rel="noopener">GitHub - Swift</a>
-        <a href="https://github.com/bitiskola/bit-typing-rust/releases" target="_blank" rel="noopener">All Releases - Rust</a>
-        <a href="https://github.com/bitiskola/bit-typing-swift/releases" target="_blank" rel="noopener">All Releases - Swift</a>
+        <a href="https://github.com/bitiskola/bit-typing-rust" target="_blank" rel="noopener">GitHub — Rust</a>
+        <a href="https://github.com/bitiskola/bit-typing-swift" target="_blank" rel="noopener">GitHub — Swift</a>
+        <a href="https://github.com/bitiskola/bit-typing-rust/releases" target="_blank" rel="noopener">Releases — Rust</a>
+        <a href="https://github.com/bitiskola/bit-typing-swift/releases" target="_blank" rel="noopener">Releases — Swift</a>
       </div>
     </div>
   </footer>
+
+  <!-- macOS download warning modal -->
+  <div class="modal-overlay" id="macos-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">
+          <svg class="warning-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Important: macOS security step required
+        </h2>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-warning-box">
+          <strong>The app will not open normally after download.</strong>
+          You must verify it once through Terminal before the first launch.
+        </div>
+
+        <p>
+          macOS Gatekeeper blocks apps that are not signed and notarized by Apple. BIT Typing is an independent open-source project, so the macOS builds are not notarized yet. This is a normal protection — not a problem with the app itself.
+        </p>
+        <p>
+          After downloading, you need to remove the quarantine attribute using Terminal. The short video below walks you through the exact steps.
+        </p>
+
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/6Vto-3kvoxo?si=h5EWpTwTk3aTi-bt"
+            title="YouTube video player — how to open BIT Typing on macOS"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="modal-checkbox">
+          <span>I have watched the tutorial and understand that I need to verify the app through Terminal before it will launch.</span>
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="modal-cancel">Cancel</button>
+          <button type="button" class="btn btn-primary" id="modal-continue" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Continue to download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     (function () {
       const ua = navigator.userAgent.toLowerCase();
       const platform = (navigator.userAgentData?.platform || navigator.platform || '').toLowerCase();
-
       const isMac = /mac|iphone|ipad|ipod/.test(platform) || /macintosh|mac os x/.test(ua);
-      const isWindows = /win/.test(platform) || /windows/.test(ua);
-      const isLinux = /linux/.test(platform) || (/linux/.test(ua) && !/android/.test(ua));
 
-      // Show appropriate screenshots
       if (isMac) {
         document.body.classList.add('show-macos');
       } else {
-        // Default to Windows/Linux screenshots for everyone else
         document.body.classList.add('show-win-linux');
       }
 
-      // Optional: highlight recommended download based on OS
-      // (cards already show available ones clearly)
+      const modal = document.getElementById('macos-modal');
+      const checkbox = document.getElementById('modal-checkbox');
+      const continueBtn = document.getElementById('modal-continue');
+      const closeBtn = document.getElementById('modal-close');
+      const cancelBtn = document.getElementById('modal-cancel');
+      let pendingUrl = null;
+
+      function openModal(url) {
+        pendingUrl = url;
+        checkbox.checked = false;
+        continueBtn.disabled = true;
+        modal.classList.add('open');
+        document.body.classList.add('modal-open');
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+        document.body.classList.remove('modal-open');
+        pendingUrl = null;
+        const iframe = modal.querySelector('iframe');
+        if (iframe) {
+          const src = iframe.src;
+          iframe.src = src;
+        }
+      }
+
+      document.querySelectorAll('.macos-download-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          openModal(btn.getAttribute('data-url'));
+        });
+      });
+
+      checkbox.addEventListener('change', function () {
+        continueBtn.disabled = !checkbox.checked;
+      });
+
+      continueBtn.addEventListener('click', function () {
+        if (checkbox.checked && pendingUrl) {
+          const url = pendingUrl;
+          closeModal();
+          window.location.href = url;
+        }
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) {
+          closeModal();
+        }
+      });
     })();
   </script>
 </body>
