@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Az internet története</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://bitiskola.github.io/ikt/prezentation1/styles.css" />
+  </head>
+  <body>
+    <!-- Bemutató nézet: a JavaScript a rögzített méretű színpadot a képernyőhöz igazítja. -->
+    <div class="viewport">
+      <!-- A színpad minden diát egységes, 1920×1080-as méretben tart. -->
+      <div class="stage" id="stage">
+        <!-- Minden dia ebben a diasorban található; egyszerre csak az .is-active látható. -->
+        <div class="deck" id="deck">
+          <section class="slide is-active" data-slide="1">
+            <div class="slide-bg grid-bg"></div>
+            <div class="title-frame">
+              <p class="kicker">IKT · 9. osztály · Történet</p>
+              <h1 class="display">
+                Az internet<br />
+                története
+              </h1>
+              <p class="lede">
+                Hogyan lett néhány kutatói gépből<br />
+                a világ legnagyobb hálózata.
+              </p>
+            </div>
+            <aside class="title-visual" aria-hidden="true">
+              <div class="ui-stack net-stack">
+                <div class="mini-nav">
+                  <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                  <span class="nav-line"></span>
+                </div>
+                <div class="timeline-mini">
+                  <div><b>1969</b><span>ARPANET</span></div>
+                  <div><b>1989</b><span>World Wide Web</span></div>
+                  <div><b>2007</b><span>Okostelefon</span></div>
+                  <div><b>ma</b><span>Mindig online</span></div>
+                </div>
+              </div>
+            </aside>
+          </section>
+
+          <!-- Alapok: internet, adatcsomagok és World Wide Web. -->
+          <section class="slide" data-slide="2">
+            <header class="slide-head">
+              <p class="kicker">Alap</p>
+              <h2>Mi az az internet?</h2>
+            </header>
+            <div class="triad">
+              <article class="triad-card">
+                <span class="triad-num">01</span>
+                <h3>Hálózat</h3>
+                <p>Számítógépek kapcsolódnak egymáshoz, világszerte.</p>
+                <div class="triad-visual nodes">
+                  <i></i><i></i><i></i><i></i>
+                </div>
+              </article>
+              <div class="triad-link" aria-hidden="true"></div>
+              <article class="triad-card">
+                <span class="triad-num">02</span>
+                <h3>Csomagok</h3>
+                <p>Az adat darabokban utazik, nem egyben.</p>
+                <div class="triad-visual packets">
+                  <span>A</span><span>B</span><span>C</span>
+                </div>
+              </article>
+              <div class="triad-link" aria-hidden="true"></div>
+              <article class="triad-card">
+                <span class="triad-num">03</span>
+                <h3>Web</h3>
+                <p>A böngészőben látott oldalak — ez a World Wide Web.</p>
+                <div class="triad-visual code-preview">http://</div>
+              </article>
+            </div>
+            <p class="footnote">Internet ≠ web. A web csak az egyik szolgáltatás a hálózaton.</p>
+          </section>
+
+          <!-- 1969: ARPANET és az első négy csomópont. -->
+          <section class="slide" data-slide="3">
+            <header class="slide-head">
+              <p class="kicker">1969</p>
+              <h2>ARPANET</h2>
+            </header>
+            <div class="split">
+              <div class="tools">
+                <ul class="pill-list">
+                  <li>USA, hidegháború</li>
+                  <li>Kutatói hálózat</li>
+                  <li>Első 4 gép</li>
+                  <li>UCLA → Stanford</li>
+                </ul>
+                <p class="note">Az első üzenet: „LO” — a LOGIN közben a rendszer összeomlott.</p>
+              </div>
+              <div class="net-map">
+                <div class="node n1"><b>UCLA</b><span>Los Angeles</span></div>
+                <div class="node n2"><b>SRI</b><span>Stanford</span></div>
+                <div class="node n3"><b>UCSB</b><span>Santa Barbara</span></div>
+                <div class="node n4"><b>Utah</b><span>Salt Lake</span></div>
+                <svg class="net-lines" viewBox="0 0 900 480" aria-hidden="true">
+                  <line x1="160" y1="90" x2="720" y2="90" />
+                  <line x1="160" y1="90" x2="160" y2="360" />
+                  <line x1="720" y1="90" x2="720" y2="360" />
+                  <line x1="160" y1="360" x2="720" y2="360" />
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 1971-től: e-mail és csomagkapcsolás. -->
+          <section class="slide" data-slide="4">
+            <header class="slide-head">
+              <p class="kicker">1971–</p>
+              <h2>E-mail és csomagkapcsolás</h2>
+            </header>
+            <div class="type-grid">
+              <div class="type-rules">
+                <div class="rule"><b>1971</b><span>Ray Tomlinson elküldi az első e-mailt.</span></div>
+                <div class="rule"><b>@ jel</b><span>felhasználó @ gép — ma is ezt használjuk.</span></div>
+                <div class="rule"><b>Csomag</b><span>Az adat darabokban, több úton is mehet.</span></div>
+                <div class="rule"><b>Ellenálló</b><span>Ha egy vonal kiesik, a többi viszi tovább.</span></div>
+              </div>
+              <article class="type-ui mail-ui">
+                <p class="caption">Beérkezett üzenetek · 1971</p>
+                <h3>Feladó: tomlinson@bbn</h3>
+                <p class="body-copy">Az első üzenet tartalma nem maradt fenn. A forma viszont igen: valaki@valahol</p>
+                <div class="type-meta">
+                  <span>Címzett</span>
+                  <span>Tárgy</span>
+                  <span>Szöveg</span>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- 1983: TCP/IP, a hálózat közös kommunikációs szabályai. -->
+          <section class="slide" data-slide="5">
+            <header class="slide-head">
+              <p class="kicker">1983</p>
+              <h2>TCP/IP — közös nyelv</h2>
+            </header>
+            <div class="spacing-layout proto-layout">
+              <div class="scale">
+                <p class="caption">Két réteg, egy cél</p>
+                <div class="proto-stack">
+                  <div><b>TCP</b><span>A csomagok sorrendje és megbízhatósága</span></div>
+                  <div><b>IP</b><span>A címzés: honnan hova megy az adat</span></div>
+                </div>
+              </div>
+              <div class="space-notes proto-notes">
+                <p><b>Előtte</b> — sokféle hálózat, nehezen értették egymást.</p>
+                <p><b>1983. jan. 1.</b> — „flag day”: az ARPANET áttér TCP/IP-re.</p>
+                <p><b>Ma</b> — minden eszköz ezt beszéli: telefon, laptop, router.</p>
+                <p><b>Lényeg</b> — közös szabályok nélkül nincs globális hálózat.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 1984: DNS, emberbarát nevek és IP-címek. -->
+          <section class="slide" data-slide="6">
+            <header class="slide-head">
+              <p class="kicker">1984</p>
+              <h2>DNS — nevek a számok helyett</h2>
+            </header>
+            <div class="color-layout dns-layout">
+              <div class="dns-flow">
+                <div class="dns-box">google.com</div>
+                <span>→</span>
+                <div class="dns-box accent">DNS</div>
+                <span>→</span>
+                <div class="dns-box">142.250.185.78</div>
+              </div>
+              <div class="contrast-pair">
+                <div class="contrast-card good-c">
+                  <span>Embernek</span>
+                  <h4>iskola.hu</h4>
+                  <p>Könnyű megjegyezni. Ezt gépeljük a címsorba.</p>
+                </div>
+                <div class="contrast-card good-c">
+                  <span>Gépnek</span>
+                  <h4>IP-cím</h4>
+                  <p>A hálózat számokkal dolgozik. A DNS fordít.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 1989–1991: a World Wide Web megszületése. -->
+          <section class="slide" data-slide="7">
+            <header class="slide-head">
+              <p class="kicker">1989–1991</p>
+              <h2>Születik a Web</h2>
+            </header>
+            <p class="lead-line">Tim Berners-Lee a CERN-nél: információk összekötése hiperhivatkozással.</p>
+            <div class="comp-grid web-grid">
+              <div class="comp">
+                <span>HTML</span>
+                <p>Az oldal szerkezete</p>
+              </div>
+              <div class="comp">
+                <span>HTTP</span>
+                <p>Hogyan kérjük le az oldalt</p>
+              </div>
+              <div class="comp">
+                <span>URL</span>
+                <p>Az oldal címe</p>
+              </div>
+              <div class="comp wide">
+                <span>Böngésző</span>
+                <div class="ds-nav"><b>info.cern.ch</b><em>az első weboldal</em></div>
+              </div>
+              <div class="comp">
+                <span>1991</span>
+                <p>Nyilvánosan elérhető</p>
+              </div>
+              <div class="comp">
+                <span>Ingyenes</span>
+                <p>Berners-Lee nem szabadalmaztatta</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 1993–1995: a grafikus webböngészők elterjedése. -->
+          <section class="slide" data-slide="8">
+            <header class="slide-head">
+              <p class="kicker">1993–1995</p>
+              <h2>A böngésző kora</h2>
+            </header>
+            <div class="ds-layout">
+              <div class="tokens">
+                <h3>Mosaic → Netscape</h3>
+                <ul>
+                  <li><b>1993</b> Mosaic: kép + szöveg együtt</li>
+                  <li><b>1994</b> Netscape Navigator</li>
+                  <li><b>1995</b> Windows 95 + internet</li>
+                  <li><b>Hatás</b> otthon is elérhetővé válik</li>
+                </ul>
+              </div>
+              <div class="browser-mock">
+                <div class="mini-nav">
+                  <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                  <span class="url-bar">http://www.netscape.com</span>
+                </div>
+                <div class="browser-body">
+                  <p class="caption">Üdvözlünk a weben</p>
+                  <h3>Kék linkek. Szürke hátterek. Lassú modem.</h3>
+                  <p>Mégis: innentől a web nem csak kutatóknak szól.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 1995–2001: a dot-com korszak. -->
+          <section class="slide" data-slide="9">
+            <header class="slide-head">
+              <p class="kicker">1995–2001</p>
+              <h2>Dot-com láz</h2>
+            </header>
+            <div class="resp-layout">
+              <ul class="resp-points">
+                <li><b>Amazon, eBay, Google</b> ekkor indul</li>
+                <li><b>Tőzsdei őrület</b> „.com” cég = aranybánya?</li>
+                <li><b>2000–2001</b> a lufi kipukkan</li>
+                <li><b>Tanulság</b> nem minden ötlet tartható</li>
+              </ul>
+              <div class="chart" aria-hidden="true">
+                <div class="bar-col" style="--h: 30%"><span>’95</span></div>
+                <div class="bar-col" style="--h: 48%"><span>’97</span></div>
+                <div class="bar-col" style="--h: 78%"><span>’99</span></div>
+                <div class="bar-col peak" style="--h: 100%"><span>’00</span></div>
+                <div class="bar-col" style="--h: 36%"><span>’01</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2000-es évek: keresők és Web 2.0. -->
+          <section class="slide" data-slide="10">
+            <header class="slide-head">
+              <p class="kicker">2000-es évek</p>
+              <h2>Keresés és Web 2.0</h2>
+            </header>
+            <p class="lead-line">Nem csak olvasunk — írunk, osztunk, feltöltünk.</p>
+            <div class="micro-grid era-grid">
+              <div class="micro">
+                <span>1998</span>
+                <strong>Google</strong>
+                <p>A keresés lesz a kapu.</p>
+              </div>
+              <div class="micro">
+                <span>2001</span>
+                <strong>Wikipedia</strong>
+                <p>Tudás, közösen.</p>
+              </div>
+              <div class="micro">
+                <span>2004</span>
+                <strong>Facebook</strong>
+                <p>Közösségi hálózat.</p>
+              </div>
+              <div class="micro">
+                <span>2005</span>
+                <strong>YouTube</strong>
+                <p>Videó mindenkinek.</p>
+              </div>
+              <div class="micro wide search-demo">
+                <span>Kereső</span>
+                <label class="search-bar">
+                  <input id="searchDemo" type="text" value="mi az az internet" readonly />
+                  <button type="button" id="searchBtn">Keresés</button>
+                </label>
+                <p class="search-out" id="searchOut">≈ 4 280 000 000 találat · 0,32 mp</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2007-től: az internet megjelenése a mobiltelefonban. -->
+          <section class="slide" data-slide="11">
+            <header class="slide-head">
+              <p class="kicker">2007–</p>
+              <h2>Zsebben az internet</h2>
+            </header>
+            <div class="a11y-layout">
+              <ul class="a11y-list">
+                <li>2007 — iPhone, érintőképernyő</li>
+                <li>Appok: net a zsebben, mindig</li>
+                <li>3G → 4G → 5G</li>
+                <li>Wifi otthon, iskolában, villamoson</li>
+                <li>A „számítógép” ma sokszor a telefon</li>
+              </ul>
+              <div class="phone" id="phone">
+                <div class="phone-ui">
+                  <header>9:41</header>
+                  <h4>Online</h4>
+                  <p>Hírek · chat · térkép · zene</p>
+                  <div class="app-grid"><i></i><i></i><i></i><i></i></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Akkor és most: az internet használatának összehasonlítása. -->
+          <section class="slide" data-slide="12">
+            <div class="versus">
+              <article class="bad-ui then-net">
+                <h2>AKKOR</h2>
+                <div class="calm then-box">
+                  <p class="caption">1995</p>
+                  <h3>Modem. Sípolás. Várakozás.</h3>
+                  <p>Egy kép perceket tölthetett. A telefonvonal foglalt volt.</p>
+                </div>
+                <ul>
+                  <li>Tárcsázós kapcsolat</li>
+                  <li>Kevesebb oldal</li>
+                  <li>Főleg szöveg</li>
+                  <li>Otthoni PC</li>
+                </ul>
+              </article>
+              <article class="good-ui">
+                <h2>MOST</h2>
+                <div class="calm">
+                  <p class="caption">2026</p>
+                  <h3>Mindig, mindenhol, azonnal.</h3>
+                  <p>Videó, felhő, közösség — egy koppintásra.</p>
+                </div>
+                <ul>
+                  <li>Szélessáv és mobilnet</li>
+                  <li>Milliárdnyi oldal és app</li>
+                  <li>Kép, hang, élőadás</li>
+                  <li>Telefon a zsebben</li>
+                </ul>
+              </article>
+            </div>
+          </section>
+
+          <!-- Idővonal: a legfontosabb mérföldkövek egy sorban. -->
+          <section class="slide" data-slide="13">
+            <header class="slide-head">
+              <p class="kicker">Ív</p>
+              <h2>Egy vonalban a történet</h2>
+            </header>
+            <ol class="process">
+              <li><span>1969</span>ARPANET</li>
+              <li><span>1983</span>TCP/IP</li>
+              <li><span>1989</span>Web</li>
+              <li><span>1993</span>Böngésző</li>
+              <li><span>1998</span>Kereső</li>
+              <li><span>2004</span>Közösség</li>
+              <li><span>2007</span>Mobil</li>
+              <li><span>ma</span>Felhő + AI</li>
+            </ol>
+            <p class="footnote">Nem egy találmány. Évtizedek egymásra épülő ötlete.</p>
+          </section>
+
+          <!-- Felelősség: adatvédelem, forráskritika, idő és digitális lábnyom. -->
+          <section class="slide" data-slide="14">
+            <header class="slide-head">
+              <p class="kicker">Felelősség</p>
+              <h2>A hálózat nem semleges</h2>
+            </header>
+            <div class="react-map">
+              <div class="map-col four-warn">
+                <article class="map-item">
+                  <div class="map-ui"><strong>Adat</strong></div>
+                  <p>Mit osztasz meg? Ki látja?</p>
+                </article>
+                <article class="map-item">
+                  <div class="map-ui"><strong>Forrás</strong></div>
+                  <p>Nem minden igaz, ami fent van.</p>
+                </article>
+                <article class="map-item">
+                  <div class="map-ui"><strong>Idő</strong></div>
+                  <p>A feed szándékosan tart bent.</p>
+                </article>
+                <article class="map-item">
+                  <div class="map-ui"><strong>Nyom</strong></div>
+                  <p>Ami kikerül, nehezen tűnik el.</p>
+                </article>
+              </div>
+              <p class="map-arrow">Használni tudni kell — nem csak csatlakozni.</p>
+            </div>
+          </section>
+
+          <!-- Összefoglaló dia. -->
+          <section class="slide" data-slide="15">
+            <header class="slide-head">
+              <p class="kicker">Zárás</p>
+              <h2>Összefoglalás</h2>
+            </header>
+            <ol class="summary">
+              <li><span>01</span><p>Az internet hálózat. A web csak egy része.</p></li>
+              <li><span>02</span><p>Katonai-kutatói kezdetből lett nyilvános tér.</p></li>
+              <li><span>03</span><p>Közös szabályok (TCP/IP, DNS) kötötték össze a világot.</p></li>
+              <li><span>04</span><p>A mobil mindenkori online létet hozott.</p></li>
+              <li><span>05</span><p>A hálózat eszköz — a használata a miénk.</p></li>
+            </ol>
+          </section>
+
+          <!-- Záródia. -->
+          <section class="slide" data-slide="16">
+            <div class="close">
+              <p class="kicker">Köszönöm</p>
+              <h1 class="display close-display">
+                Kapcsolódj.<br />
+                Kérdezz.<br />
+                Építs.
+              </h1>
+              <p class="lede">Az internetet emberek találták ki — és emberek alakítják tovább.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rögzített bemutatóvezérlők: folyamatjelző, diaszámláló, navigáció és teljes képernyő. -->
+    <div class="chrome">
+      <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+      <div class="bar">
+        <span id="counter">01 / 16</span>
+        <p class="hint" id="hint">→ a folytatáshoz</p>
+        <div class="bar-actions">
+          <button type="button" id="prevBtn" aria-label="Előző dia">←</button>
+          <button type="button" id="nextBtn" aria-label="Következő dia">→</button>
+          <button type="button" id="fsBtn" aria-label="Teljes képernyő">Teljes képernyő</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- A bemutató működése és navigációja. -->
+    <script src="https://bitiskola.github.io/ikt/prezentation1/app.js"></script>
+  </body>
+</html>
