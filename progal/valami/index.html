@@ -4,25 +4,54 @@
     <meta charset="UTF-8">
     <title>E-KRETA</title>
     <link rel="stylesheet" href="https://bitiskola.github.io/ekreten/src/style.css">
+    <style>
+        .button-container {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div class="logo-header">
         <img src="https://e-kreten.github.io/src/logo.png" alt="KRETÉN Logo">
       </div>
-        <div class="container">
+        <div class="container" id="embed1">
             <div class="header" id="title">
                 <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50">
                 <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50">
                 <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50">
                 <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50">
                 <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50"><br>
-                <p style="color: green; background-color: greenyellow;">PATKÁNY!!!</p>
+                <p style="color: green; background-color: greenyellow;">Ez egy div (embed1)</p>
             </div>
-            <div class="content">
+            <div class="content" id="embed2">
             <p style="color: red; background-color: yellow; text-align: center;">Szöveg</p>
             <p style="color: purple; background-color: lavender; text-align: center">Ezis egy szöveg</p>
             <p style="color: rgb(209, 204, 209); background-color: rgb(0, 0, 0); text-align: center">Kinemtalálná mi ez</p>
-            <a href="https://bitiskola.github.io/progal/rat.gif" style="text-align: center;" download>Töltsd le a rat.gif-et!</a>
+            <a href="https://bitiskola.github.io/progal/rat.gif" style="text-align: center;" download>Töltsd le a rat.gif-et!</a><br>
+            <a href="https://bitiskola.github.io/progal/valami/onelet.docx" style="text-align: center;" download>Töltsd le az onelet.docx-et!</a><br>
+            <div class="button-container">
+            <br>
+            <button class="button" onclick="window.location.href='#embed2'">Ugrás a 2. div-hez (embed2-höz)</button>
+            </div>
+           <div class="content2"> 
+            </div>
+            </div>
+            </div>
+            <div class="container">
+            <div class="header" id="title">
+                <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50">
+                <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50">
+                <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50">
+                <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50">
+                <img src="https://bigrat.monster/media/bigrat.jpg" width="70" height="50"><br>
+                <p style="color: green; background-color: greenyellow;">Ez egy másik div (embed2)</p>
+            </div>
+            <div class="content">
+            <p style="color: red; background-color: yellow; text-align: center;">Nincs itt semmi.</p>
+            <div class="button-container">
+            <br>
+            <button class="button" onclick="window.location.href='#embed1'">Ugrás a 1. div-hez (embed1-hez)</button>
+            </div>
            <div class="content2"> 
             </div>
             </div>
