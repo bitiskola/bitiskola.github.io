@@ -3,152 +3,748 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>animációk & favico</title>
-  <link rel="stylesheet" href="https://e-kreten.github.io/src/naplo_login_style.css">
-  <link rel="icon" href="https://bitiskola.github.io/progal/animsandfavico/favicon.ico">
+
+  <link rel="stylesheet"
+        href="https://e-kreten.github.io/src/naplo_login_style.css">
+
+  <link rel="icon"
+        href="https://bitiskola.github.io/progal/animsandfavico/favicon.ico">
+
   <style>
     a.pulser {
-        animation: pulse 1s infinite;
+      animation: pulse 1s infinite;
     }
+
     a.hyperlink {
-        display: inline-block;
-        color: teal;
-        font-weight: bold;
+      display: inline-block;
+      color: teal;
+      font-weight: bold;
     }
+
     @keyframes pulse {
-        0%, 100% {transform: scale(1) rotate(0deg);}
-        50% {transform: scale(1.2) rotate(-4deg);}
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+      }
+
+      50% {
+        transform: scale(1.2) rotate(-4deg);
+      }
     }
-    </style>
+
+    /* =========================
+       Discord popup
+       ========================= */
+
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+
+      display: none;
+      justify-content: center;
+      align-items: center;
+
+      background: rgba(0, 0, 0, 0.55);
+
+      z-index: 9999;
+    }
+
+    .popup-overlay.active {
+      display: flex;
+    }
+
+    .popup {
+      position: relative;
+
+      width: calc(100% - 40px);
+      max-width: 400px;
+
+      padding: 25px;
+
+      background: white;
+      color: #333;
+
+      border-radius: 15px;
+
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+
+      animation: popupIn 0.2s ease-out;
+    }
+
+    @keyframes popupIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .popup h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .popup textarea {
+      width: 100%;
+      min-height: 120px;
+
+      resize: vertical;
+
+      padding: 10px;
+
+      border: 1px solid #ccc;
+      border-radius: 8px;
+
+      font-family: inherit;
+      font-size: 14px;
+
+      outline: none;
+    }
+
+    .popup textarea:focus {
+      border-color: #3e8ef7;
+    }
+
+    /* =========================
+       IP checkbox
+       ========================= */
+
+    .ip-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      margin-top: 12px;
+      margin-bottom: 5px;
+
+      font-size: 13px;
+      font-weight: normal;
+      color: #555;
+
+      cursor: pointer;
+    }
+
+    .ip-option input {
+      width: auto;
+      margin: 0;
+
+      cursor: pointer;
+    }
+
+    body.dark .ip-option {
+      color: #ccc;
+    }
+
+    /* =========================
+       Popup buttons
+       ========================= */
+
+    .popup-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .popup-buttons button {
+      flex: 1;
+    }
+
+    .popup-cancel {
+      background: #777;
+    }
+
+    .popup-cancel:hover {
+      background: #555;
+    }
+
+    /* =========================
+       Dark theme
+       ========================= */
+
+    body.dark .popup {
+      background: #1e1e1e;
+      color: #eee;
+    }
+
+    body.dark .popup textarea {
+      background: #333;
+      color: white;
+      border-color: #555;
+    }
+  </style>
 </head>
+
 <body>
+
   <div class="animated-bg" id="background"></div>
 
-  <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+
+  <!-- =========================
+       Settings
+       ========================= -->
+
+  <button class="settings-btn" onclick="toggleSettings()">
+    ⚙️
+  </button>
+
   <div class="settings-panel" id="settingsPanel">
+
     <label for="color1">Szín 1:</label>
-    <input type="color" id="color1" value="#3e8ef7" onchange="updateColors()"><br>
+
+    <input
+      type="color"
+      id="color1"
+      value="#3e8ef7"
+      onchange="updateColors()"
+    >
+
+    <br>
+
     <label for="color2">Szín 2:</label>
-    <input type="color" id="color2" value="#6c5ce7" onchange="updateColors()"><br>
+
+    <input
+      type="color"
+      id="color2"
+      value="#6c5ce7"
+      onchange="updateColors()"
+    >
+
+    <br>
+
     <label for="theme">Téma:</label>
-    <button class="theme-toggle" onclick="toggleTheme()" id="theme">🌙</button>
+
+    <button
+      class="theme-toggle"
+      onclick="toggleTheme()"
+      id="theme"
+    >
+      🌙
+    </button>
+
   </div>
 
+
+  <!-- =========================
+       Login box
+       ========================= -->
+
   <div class="login-box">
+
     <div class="logo-header">
-        <img id="logo" src="https://e-kreten.github.io/src/logo-dark.png" alt="KRETÉN Logo Dark">
+
+      <img
+        id="logo"
+        src="https://e-kreten.github.io/src/logo-dark.png"
+        alt="KRETÉN Logo Dark"
+      >
+
     </div>
+
     <p>valami</p>
-    <a class="pulser hyperlink" href="https://bigrat.monster/" target="_blank" id="hyperlink">🔗 Kattints ide!</a>
+
+    <a
+      class="pulser hyperlink"
+      href="https://bigrat.monster/"
+      target="_blank"
+      id="hyperlink"
+    >
+      🔗 Kattints ide!
+    </a>
+
+    <button onclick="openPopup()">
+      Kattints ide
+    </button>
+
   </div>
+
+
+  <!-- =========================
+       Discord popup
+       ========================= -->
+
+  <div
+    class="popup-overlay"
+    id="popupOverlay"
+    onclick="closePopupOutside(event)"
+  >
+
+    <div
+      class="popup"
+      onclick="event.stopPropagation()"
+    >
+
+      <h2>Üzenet küldése</h2>
+
+      <textarea
+        id="messageInput"
+        placeholder="Írd ide az üzeneted..."
+        maxlength="2000"
+      ></textarea>
+
+
+      <!-- IP checkbox -->
+
+      <label class="ip-option">
+
+        <input
+          type="checkbox"
+          id="sendIP"
+          checked
+        >
+
+        IP-cím küldése az üzenettel
+
+      </label>
+
+
+      <!-- Buttons -->
+
+      <div class="popup-buttons">
+
+        <button
+          class="popup-cancel"
+          onclick="closePopup()"
+        >
+          Mégse
+        </button>
+
+        <button
+          id="sendButton"
+          onclick="sendToDiscord()"
+        >
+          Küldés
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
 
   <script>
 
-    const hyperlink = document.getElementById('hyperlink');
+    /* =========================
+       Hyperlink animation
+       ========================= */
+
+    const hyperlink =
+      document.getElementById('hyperlink');
 
     hyperlink.addEventListener('mouseenter', () => {
-        hyperlink.classList.remove('pulser');
+      hyperlink.classList.remove('pulser');
     });
 
     hyperlink.addEventListener('mouseleave', () => {
-        hyperlink.classList.add('pulser');
+      hyperlink.classList.add('pulser');
     });
 
+
+    /* =========================
+       Settings
+       ========================= */
+
     function toggleSettings() {
-      const panel = document.getElementById('settingsPanel');
-      panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+
+      const panel =
+        document.getElementById('settingsPanel');
+
+      panel.style.display =
+        panel.style.display === 'block'
+          ? 'none'
+          : 'block';
     }
+
+
+    /* =========================
+       Background colors
+       ========================= */
+
     function updateColors() {
-    const color1 = document.getElementById('color1').value;
-    const color2 = document.getElementById('color2').value;
-    document.documentElement.style.setProperty('--color1', color1);
-    document.documentElement.style.setProperty('--color2', color2);
-    
-    // Mentsd el localStorage-be
-    localStorage.setItem('bgColor1', color1);
-    localStorage.setItem('bgColor2', color2);
-    }
-    window.onload = function () {
-    const savedColor1 = localStorage.getItem('bgColor1');
-    const savedColor2 = localStorage.getItem('bgColor2');
 
-    if (savedColor1 && savedColor2) {
-        document.documentElement.style.setProperty('--color1', savedColor1);
-        document.documentElement.style.setProperty('--color2', savedColor2);
-        document.getElementById('color1').value = savedColor1;
-        document.getElementById('color2').value = savedColor2;
+      const color1 =
+        document.getElementById('color1').value;
+
+      const color2 =
+        document.getElementById('color2').value;
+
+      document.documentElement.style.setProperty(
+        '--color1',
+        color1
+      );
+
+      document.documentElement.style.setProperty(
+        '--color2',
+        color2
+      );
+
+      localStorage.setItem('bgColor1', color1);
+      localStorage.setItem('bgColor2', color2);
     }
-    };
+
+
+    /* =========================
+       Theme
+       ========================= */
+
     function toggleTheme() {
-    const current = document.body.classList.contains("dark") ? "light" : "dark";
-    setTheme(current);
 
-  if (current == "light") {
-    document.querySelector(".theme-toggle").innerText = "🌙";
-  } else {
-    document.querySelector(".theme-toggle").innerText = "🔆";
-  }
-  }
+      const current =
+        document.body.classList.contains("dark")
+          ? "light"
+          : "dark";
 
-  function setTheme(theme) {
-    document.body.classList.remove("light", "dark");
-    document.body.classList.add(theme);
-    localStorage.setItem("theme", theme);
+      setTheme(current);
 
-    const logo = document.getElementById("logo");
-    if (theme === "dark") {
-      logo.src = "https://e-kreten.github.io/src/logo.png";
-      logo.alt = "KRETÉN Logo Light"
-    } else {
-      logo.src = "https://e-kreten.github.io/src/logo-dark.png";
-      logo.alt = "KRETÉN Logo Dark"
+      if (current === "light") {
+
+        document.querySelector(
+          ".theme-toggle"
+        ).innerText = "🌙";
+
+      } else {
+
+        document.querySelector(
+          ".theme-toggle"
+        ).innerText = "🔆";
+      }
     }
-  }
 
-  window.onload = function () {
-    const savedColor1 = localStorage.getItem('bgColor1');
-    const savedColor2 = localStorage.getItem('bgColor2');
-    const savedTheme = localStorage.getItem("theme") || "light";
 
-    if (savedColor1 && savedColor2) {
-      document.documentElement.style.setProperty('--color1', savedColor1);
-      document.documentElement.style.setProperty('--color2', savedColor2);
-      document.getElementById('color1').value = savedColor1;
-      document.getElementById('color2').value = savedColor2;
+    function setTheme(theme) {
+
+      document.body.classList.remove(
+        "light",
+        "dark"
+      );
+
+      document.body.classList.add(theme);
+
+      localStorage.setItem("theme", theme);
+
+      const logo =
+        document.getElementById("logo");
+
+      if (theme === "dark") {
+
+        logo.src =
+          "https://e-kreten.github.io/src/logo.png";
+
+        logo.alt =
+          "KRETÉN Logo Light";
+
+      } else {
+
+        logo.src =
+          "https://e-kreten.github.io/src/logo-dark.png";
+
+        logo.alt =
+          "KRETÉN Logo Dark";
+      }
     }
-    if (savedTheme == "light") {
-    document.querySelector(".theme-toggle").innerText = "🌙";
-  } else {
-    document.querySelector(".theme-toggle").innerText = "🔆";
-  }
 
-    setTheme(savedTheme);
-  };
 
-  async function getIP() {
-    try {
-      const response = await fetch("https://api64.ipify.org?format=json");
-      const data = await response.json();
-      const ip = data.ip;
+    /* =========================
+       Load saved settings
+       ========================= */
 
-      const url = "https://discord.com/api/webhooks/1554105732566093974/wx-mUqe_7a9PrMuJtoVOmFTQeEaIZ-hrbSx2Vw8QazUK8lMGKQRQI8bAVfeKWn-uFtxO";
-      const payload = {
-        content: `Public IP Address: ${ip}`
-      };
+    window.addEventListener("load", () => {
 
-      await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-    } catch (error) {
-      console.error("Error:", error);
+      const savedColor1 =
+        localStorage.getItem('bgColor1');
+
+      const savedColor2 =
+        localStorage.getItem('bgColor2');
+
+      const savedTheme =
+        localStorage.getItem("theme") || "light";
+
+
+      if (savedColor1 && savedColor2) {
+
+        document.documentElement.style.setProperty(
+          '--color1',
+          savedColor1
+        );
+
+        document.documentElement.style.setProperty(
+          '--color2',
+          savedColor2
+        );
+
+        document.getElementById('color1').value =
+          savedColor1;
+
+        document.getElementById('color2').value =
+          savedColor2;
+      }
+
+
+      if (savedTheme === "light") {
+
+        document.querySelector(
+          ".theme-toggle"
+        ).innerText = "🌙";
+
+      } else {
+
+        document.querySelector(
+          ".theme-toggle"
+        ).innerText = "🔆";
+      }
+
+      setTheme(savedTheme);
+    });
+
+
+    /* =========================
+       Open popup
+       ========================= */
+
+    function openPopup() {
+
+      const popup =
+        document.getElementById("popupOverlay");
+
+      const input =
+        document.getElementById("messageInput");
+
+      const sendIP =
+        document.getElementById("sendIP");
+
+
+      popup.classList.add("active");
+
+      input.value = "";
+
+      // Checked by default every time
+      sendIP.checked = true;
+
+
+      setTimeout(() => {
+        input.focus();
+      }, 100);
     }
-  }
 
-  getIP();
+
+    /* =========================
+       Close popup
+       ========================= */
+
+    function closePopup() {
+
+      document
+        .getElementById("popupOverlay")
+        .classList.remove("active");
+    }
+
+
+    function closePopupOutside(event) {
+
+      if (
+        event.target ===
+        document.getElementById("popupOverlay")
+      ) {
+        closePopup();
+      }
+    }
+
+
+    /* =========================
+       Get public IP
+       ========================= */
+
+    async function getIP() {
+
+      const response =
+        await fetch(
+          "https://api64.ipify.org?format=json"
+        );
+
+      if (!response.ok) {
+        throw new Error(
+          "Nem sikerült lekérni az IP-címet."
+        );
+      }
+
+      const data =
+        await response.json();
+
+      return data.ip;
+    }
+
+
+    /* =========================
+       Send message to Discord
+       ========================= */
+
+    async function sendToDiscord() {
+
+      const input =
+        document.getElementById("messageInput");
+
+      const sendIP =
+        document.getElementById("sendIP").checked;
+
+      const sendButton =
+        document.getElementById("sendButton");
+
+
+      const message =
+        input.value.trim();
+
+
+      /* Empty message check */
+
+      if (!message) {
+
+        alert("Írj be egy üzenetet!");
+
+        input.focus();
+
+        return;
+      }
+
+
+      /*
+       * Discord webhook URL
+       *
+       * WARNING:
+       * This URL is visible to anyone who
+       * can inspect the page source.
+       */
+
+      const webhookURL =
+        "https://discord.com/api/webhooks/1554105732566093974/wx-mUqe_7a9PrMuJtoVOmFTQeEaIZ-hrbSx2Vw8QazUK8lMGKQRQI8bAVfeKWn-uFtxO";
+
+
+      try {
+
+        /*
+         * Disable button while sending
+         */
+
+        sendButton.disabled = true;
+        sendButton.innerText = "Küldés...";
+
+
+        /*
+         * Start with the message
+         */
+
+        let content =
+          `Üzenet: ${message}`;
+
+
+        /*
+         * Only request the IP when
+         * the checkbox is checked.
+         */
+
+        if (sendIP) {
+
+          const ip =
+            await getIP();
+
+          content +=
+            `\nIP-cím: ${ip}`;
+        }
+
+
+        /*
+         * Discord payload
+         */
+
+        const payload = {
+          content: content
+        };
+
+
+        /*
+         * Send to Discord
+         */
+
+        const response =
+          await fetch(webhookURL, {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify(payload)
+          });
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Discord webhook error: " +
+            response.status
+          );
+        }
+
+
+        /*
+         * Success
+         */
+
+        alert(
+          "Az üzenet sikeresen elküldve!"
+        );
+
+        closePopup();
+
+
+      } catch (error) {
+
+        console.error(
+          "Küldési hiba:",
+          error
+        );
+
+        alert(
+          "Hiba történt az üzenet küldése közben."
+        );
+
+
+      } finally {
+
+        /*
+         * Re-enable button
+         */
+
+        sendButton.disabled = false;
+        sendButton.innerText = "Küldés";
+      }
+    }
+
+
+    /* =========================
+       ESC closes popup
+       ========================= */
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "Escape") {
+          closePopup();
+        }
+
+      }
+    );
+
   </script>
+
 </body>
-      </html>
+</html>
