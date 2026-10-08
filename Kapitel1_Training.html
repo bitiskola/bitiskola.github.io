@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitel 1-Training (A1 Deutsch)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .btn-hover {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .word-chip {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+        .word-chip:hover {
+            transform: scale(1.04);
+        }
+        .word-chip:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-50 text-slate-900">
+
+    <!-- Header Navbar -->
+    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-700 p-2 rounded-lg text-indigo-200">
+                    <i class="fa-solid fa-graduation-cap text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">Kapitel 1-Training</h1>
+                    <p class="text-xs text-indigo-200">A1 Deutsch • Interaktives Quiz</p>
+                </div>
+            </div>
+            <div id="header-score-badge" class="bg-indigo-800/80 border border-indigo-700/50 px-3 py-1.5 rounded-full text-xs font-semibold text-indigo-100 flex items-center space-x-2">
+                <i class="fa-solid fa-star text-amber-400"></i>
+                <span id="header-score-text">Punkte: 0 / 20</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 py-8 w-full flex-grow">
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 text-center my-auto">
+            <div class="w-16 h-16 bg-indigo-100 text-indigo-700 rounded-2xl flex items-center justify-center mx-auto mb-5 text-2xl shadow-inner">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">Willkommen zum Kapitel 1-Training!</h2>
+            <p class="text-slate-600 mb-6 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
+                Testen Sie Ihr Wissen über Verben (<span class="font-semibold text-slate-800">wohnen, kommen, heißen, sein, sprechen, lernen</span>), Länder, Sprachen, Zahlen von 1 bis 20 und Satzbildung auf A1-Niveau.
+            </p>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-8 text-left max-w-md mx-auto text-xs sm:text-sm text-slate-600 space-y-2">
+                <div class="flex items-center space-x-2 text-indigo-900 font-semibold mb-1">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Übersicht des Tests:</span>
+                </div>
+                <p>• <strong>20 Fragen</strong> mit Sofortkorrektur</p>
+                <p>• Multi-Choice & Interaktive Satzbildung</p>
+                <p>• Themen: Grammatik, Wortschatz, Zahlen (1–20)</p>
+            </div>
+
+            <button id="start-quiz-btn" class="btn-hover w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-indigo-200 flex items-center justify-center space-x-2 mx-auto text-base">
+                <span>Training jetzt starten</span>
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden space-y-6">
+            
+            <!-- Progress Bar Card -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                <div class="flex justify-between items-center text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    <span id="question-progress-text">Frage 1 von 20</span>
+                    <span id="category-badge" class="bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-semibold">Grammatik</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-full w-0 transition-all duration-300 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                
+                <h3 id="question-title" class="text-lg sm:text-xl font-bold text-slate-900 mb-6 leading-snug">
+                    <!-- Question text injected here -->
+                </h3>
+
+                <!-- MULTIPLE CHOICE OPTIONS CONTAINER -->
+                <div id="mc-container" class="space-y-3">
+                    <!-- Options dynamically loaded here -->
+                </div>
+
+                <!-- SENTENCE BUILDER CONTAINER (Questions 13, 14, 15) -->
+                <div id="sentence-builder-container" class="hidden space-y-6">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Klicken Sie auf die Wörter, um den Satz zu bauen:</p>
+
+                    <!-- User Constructed Sentence Display Area -->
+                    <div id="constructed-sentence-box" class="min-h-[64px] p-4 bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl flex flex-wrap gap-2 items-center">
+                        <span id="placeholder-text" class="text-slate-400 italic text-sm">Hier erscheint Ihr Satz...</span>
+                    </div>
+
+                    <!-- Available Word Chips -->
+                    <div>
+                        <span class="text-xs font-medium text-slate-400 mb-2 block">Verfügbare Wörter:</span>
+                        <div id="word-chips-pool" class="flex flex-wrap gap-2">
+                            <!-- Word chips loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-2">
+                        <button id="reset-sentence-btn" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-lg btn-hover flex items-center space-x-1.5">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span>Zurücksetzen</span>
+                        </button>
+                        <button id="submit-sentence-btn" class="px-6 py-2 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md shadow-indigo-100 btn-hover flex items-center space-x-2">
+                            <span>Antwort prüfen</span>
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FEEDBACK PANEL (Shows after answering) -->
+                <div id="feedback-panel" class="hidden mt-6 p-4 rounded-xl border">
+                    <div class="flex items-start space-x-3">
+                        <div id="feedback-icon" class="text-xl mt-0.5"></div>
+                        <div class="space-y-1">
+                            <h4 id="feedback-title" class="font-bold text-sm"></h4>
+                            <p id="feedback-explanation" class="text-sm text-slate-600"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <div class="flex justify-end">
+                <button id="next-question-btn" class="hidden btn-hover bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl shadow-md flex items-center space-x-2">
+                    <span id="next-btn-text">Nächste Frage</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-8">
+            <div class="text-center space-y-3">
+                <div id="result-icon-container" class="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-inner">
+                    <!-- Icon loaded here -->
+                </div>
+                <h2 id="result-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900"></h2>
+                <p id="result-subtitle" class="text-slate-600 max-w-md mx-auto text-sm sm:text-base"></p>
+                
+                <div class="inline-flex items-center space-x-3 bg-slate-50 border border-slate-200 px-6 py-3 rounded-2xl mt-4">
+                    <span class="text-3xl font-black text-indigo-600" id="final-score-text">0 / 20</span>
+                    <span class="text-slate-300 font-light text-2xl">|</span>
+                    <span class="text-lg font-bold text-slate-700" id="final-percentage-text">0%</span>
+                </div>
+            </div>
+
+            <!-- Detailed Review List -->
+            <div class="border-t border-slate-200 pt-6">
+                <h3 class="font-bold text-lg text-slate-900 mb-4 flex items-center space-x-2">
+                    <i class="fa-solid fa-list-check text-indigo-600"></i>
+                    <span>Detaillierte Übersicht Ihrer Antworten</span>
+                </h3>
+                <div id="review-list" class="space-y-3">
+                    <!-- Detailed question results injected here -->
+                </div>
+            </div>
+
+            <div class="flex justify-center pt-4">
+                <button id="restart-quiz-btn" class="btn-hover bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-indigo-200 flex items-center space-x-2">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Test erneut starten</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <div class="max-w-4xl mx-auto px-4">
+            Kapitel 1-Training • A1 Deutsch Übungstest • Alle Rechte vorbehalten
+        </div>
+    </footer>
+
+    <script>
+        /* Quiz Questions Database (All German, 20 Questions) */
+        const quizQuestions = [
+            {
+                id: 1,
+                category: "Verben",
+                question: "Ergänzen Sie den Dialog:\n— Hallo! Wie ______ du?\n— Ich heiße Marco.",
+                options: ["heißt", "heiße", "heißen"],
+                correctAnswer: "heißt",
+                explanation: "Bei der Du-Form (2. Person Singular) lautet die Endung von 'heißen': du heißt."
+            },
+            {
+                id: 2,
+                category: "Verben",
+                question: "Welches Verb passt im Dialog?\n— Woher kommst du?\n— Ich ______ aus Deutschland.",
+                options: ["kommt", "komme", "kommen"],
+                correctAnswer: "komme",
+                explanation: "Bei der Ich-Form (1. Person Singular) lautet die Endung '-e': Ich komme."
+            },
+            {
+                id: 3,
+                category: "Wohnort",
+                question: "Welcher Satz drückt den Wohnort korrekt aus?",
+                options: ["Ich wohnen in Budapest.", "Ich wohne in Budapest.", "Ich wohnt in Budapest."],
+                correctAnswer: "Ich wohne in Budapest.",
+                explanation: "Die richtige Konjugation für 'ich' ist 'wohne'."
+            },
+            {
+                id: 4,
+                category: "Sprachen",
+                question: "Ergänzen Sie das Verb 'sprechen':\n— ______ du Deutsch und Englisch?",
+                options: ["Spreche", "Sprichst", "Sprecht"],
+                correctAnswer: "Sprichst",
+                explanation: "'Sprechen' ist ein unregelmäßiges Verb mit Vokalwechsel (e -> i): du sprichst."
+            },
+            {
+                id: 5,
+                category: "Verb sein",
+                question: "Welche Formen des Verbs 'sein' sind korrekt?\n— Wer ______ das?\n— Das ______ Peter und Anna.",
+                options: ["ist / sind", "bin / ist", "sind / ist"],
+                correctAnswer: "ist / sind",
+                explanation: "'das' (Singular) braucht 'ist'; 'Peter und Anna' (Plural) braucht 'sind'."
+            },
+            {
+                id: 6,
+                category: "Wortstellung",
+                question: "Welche Frage hat die richtige Wortstellung?",
+                options: ["Welche Sprachen lernst du?", "Lernst welche Sprachen du?", "Du lernst welche Sprachen?"],
+                correctAnswer: "Welche Sprachen lernst du?",
+                explanation: "Fragewort (Welche Sprachen) + konjugiertes Verb (lernst) + Subjekt (du)."
+            },
+            {
+                id: 7,
+                category: "Länder & Sprachen",
+                question: "Ergänzen Sie das Land und die Sprache:\nMaria kommt aus ______ und spricht ______.",
+                options: ["Spanien / Spanisch", "Spanisch / Spanien", "Spanien / Spanien"],
+                correctAnswer: "Spanien / Spanisch",
+                explanation: "Das Land heißt 'Spanien', die Sprache heißt 'Spanisch'."
+            },
+            {
+                id: 8,
+                category: "Zahlen 1–20",
+                question: "Was ist das Ergebnis als Wort?\nvier + elf = ?",
+                options: ["dreizehn", "vierzehn", "fünfzehn"],
+                correctAnswer: "fünfzehn",
+                explanation: "4 (vier) + 11 (elf) = 15 (fünfzehn)."
+            },
+            {
+                id: 9,
+                category: "Zahlen 1–20",
+                question: "Welche Zahl fehlt in der Reihe?\neins, zwei, drei, ______, fünf, sechs",
+                options: ["vier", "sieben", "acht"],
+                correctAnswer: "vier",
+                explanation: "Die Zahl nach 3 (drei) ist 4 (vier)."
+            },
+            {
+                id: 10,
+                category: "Verben",
+                question: "Ergänzen Sie den Satz:\nWir ______ Deutsch in der Schule.",
+                options: ["lerne", "lernen", "lernt"],
+                correctAnswer: "lernen",
+                explanation: "Bei 'wir' (1. Person Plural) bleibt der Infinitiv erhalten: wir lernen."
+            },
+            {
+                id: 11,
+                category: "Pronomen",
+                question: "Welches Pronomen passt im Dialog?\n— Woher kommt ihr?\n— ______ kommen aus Österreich.",
+                options: ["Wir", "Sie", "Ihr"],
+                correctAnswer: "Wir",
+                explanation: "Auf die Frage an 'ihr' antwortet man mit 'wir'."
+            },
+            {
+                id: 12,
+                category: "Verbformen",
+                question: "Ergänzen Sie die richtigen Verbformen:\nEr ______ in Berlin und ______ als Arzt.",
+                options: ["wohnst / bin", "wohnt / ist", "wohnen / sind"],
+                correctAnswer: "wohnt / ist",
+                explanation: "Er (3. Person Singular): wohnt (wohnen) und ist (sein)."
+            },
+            {
+                id: 13,
+                category: "Satzbildung",
+                question: "Bringen Sie die Wörter in die richtige Reihenfolge:",
+                type: "sentence_builder",
+                words: ["aus", "komme", "Deutschland", "Ich", "."],
+                correctAnswer: "Ich komme aus Deutschland.",
+                explanation: "Aussagesatz: Subjekt (Ich) + Verb an Position 2 (komme) + Präpositionalergänzung (aus Deutschland)."
+            },
+            {
+                id: 14,
+                category: "Satzbildung",
+                question: "Bilden Sie eine korrekte W-Frage:",
+                type: "sentence_builder",
+                words: ["wohnen", "Wo", "Sie", "?"],
+                correctAnswer: "Wo wohnen Sie?",
+                explanation: "W-Frage: Fragewort (Wo) + Verb an Position 2 (wohnen) + Subjekt (Sie)?"
+            },
+            {
+                id: 15,
+                category: "Satzbildung",
+                question: "Bringen Sie die Wörter in die richtige Reihenfolge:",
+                type: "sentence_builder",
+                words: ["gut", "spricht", "Englisch", "Er", "."],
+                correctAnswer: "Er spricht gut Englisch.",
+                explanation: "Subjekt (Er) + Verb (spricht) + Angabe/Objekt (gut Englisch)."
+            },
+            {
+                id: 16,
+                category: "Zahlen 1–20",
+                question: "Welche Zahl entspricht dem Wort 'sechzehn'?",
+                options: ["6", "16", "60"],
+                correctAnswer: "16",
+                explanation: "sech + zehn = 16 (sechzehn)."
+            },
+            {
+                id: 17,
+                category: "Dialoge",
+                question: "Ergänzen Sie das Verb im Dialog:\n— Was ______ du?\n— Ich lerne Italienisch.",
+                options: ["lernst", "lerne", "lernt"],
+                correctAnswer: "lernst",
+                explanation: "Bei 'du' lautet die Form: lernst."
+            },
+            {
+                id: 18,
+                category: "Fehlersuche",
+                question: "In welchem Satz ist die Verbform FALSCH?",
+                options: ["Er spricht Deutsch.", "Er sprechen Deutsch.", "Er lernt Deutsch."],
+                correctAnswer: "Er sprechen Deutsch.",
+                explanation: "Falsch ist 'Er sprechen'. Richtig heißt es: 'Er spricht Deutsch'."
+            },
+            {
+                id: 19,
+                category: "Zahlen 1–20",
+                question: "Welche Zahl fehlt in der Reihe?\nacht, neun, zehn, ______, zwölf",
+                options: ["elf", "dreizehn", "vierzehn"],
+                correctAnswer: "elf",
+                explanation: "Nach 10 (zehn) kommt 11 (elf)."
+            },
+            {
+                id: 20,
+                category: "Verben",
+                question: "Ergänzen Sie die passenden Verben im Plural:\nLisa und Peter ______ aus Österreich und sie ______ Deutsch.",
+                options: ["kommt / sprichst", "kommen / sprechen", "komme / sprechen"],
+                correctAnswer: "kommen / sprechen",
+                explanation: "Lisa und Peter = sie (Plural). Formen: kommen und sprechen."
+            }
+        ];
+
+        class QuizApp {
+            constructor() {
+                this.currentIndex = 0;
+                this.score = 0;
+                this.userAnswers = [];
+                this.selectedWords = [];
+                this.isCurrentAnswered = false;
+                
+                // Element References
+                this.startScreen = document.getElementById('start-screen');
+                this.quizScreen = document.getElementById('quiz-screen');
+                this.resultScreen = document.getElementById('result-screen');
+                
+                this.progressBar = document.getElementById('progress-bar');
+                this.progressText = document.getElementById('question-progress-text');
+                this.categoryBadge = document.getElementById('category-badge');
+                
+                this.questionTitle = document.getElementById('question-title');
+                this.mcContainer = document.getElementById('mc-container');
+                this.sbContainer = document.getElementById('sentence-builder-container');
+                
+                this.wordChipsPool = document.getElementById('word-chips-pool');
+                this.constructedBox = document.getElementById('constructed-sentence-box');
+                this.placeholderText = document.getElementById('placeholder-text');
+                
+                this.feedbackPanel = document.getElementById('feedback-panel');
+                this.feedbackIcon = document.getElementById('feedback-icon');
+                this.feedbackTitle = document.getElementById('feedback-title');
+                this.feedbackExplanation = document.getElementById('feedback-explanation');
+                
+                this.nextBtn = document.getElementById('next-question-btn');
+                this.nextBtnText = document.getElementById('next-btn-text');
+                this.headerScoreText = document.getElementById('header-score-text');
+                
+                this.submitSentenceBtn = document.getElementById('submit-sentence-btn');
+                this.resetSentenceBtn = document.getElementById('reset-sentence-btn');
+
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                document.getElementById('start-quiz-btn').addEventListener('click', () => this.startQuiz());
+                document.getElementById('restart-quiz-btn').addEventListener('click', () => this.startQuiz());
+                this.nextBtn.addEventListener('click', () => this.nextQuestion());
+                this.submitSentenceBtn.addEventListener('click', () => this.submitSentenceAnswer());
+                this.resetSentenceBtn.addEventListener('click', () => this.resetSentenceBuilder());
+            }
+
+            startQuiz() {
+                this.currentIndex = 0;
+                this.score = 0;
+                this.userAnswers = [];
+                
+                this.startScreen.classList.add('hidden');
+                this.resultScreen.classList.add('hidden');
+                this.quizScreen.classList.remove('hidden');
+                
+                this.updateHeaderScore();
+                this.loadQuestion();
+            }
+
+            updateHeaderScore() {
+                this.headerScoreText.textContent = `Punkte: ${this.score} / ${quizQuestions.length}`;
+            }
+
+            loadQuestion() {
+                this.isCurrentAnswered = false;
+                const q = quizQuestions[this.currentIndex];
+                
+                // Update Progress Header
+                const progressPct = ((this.currentIndex + 1) / quizQuestions.length) * 100;
+                this.progressBar.style.width = `${progressPct}%`;
+                this.progressText.textContent = `Frage ${this.currentIndex + 1} von ${quizQuestions.length}`;
+                this.categoryBadge.textContent = q.category;
+                
+                // Reset UI Components
+                this.questionTitle.textContent = q.question;
+                this.feedbackPanel.classList.add('hidden');
+                this.nextBtn.classList.add('hidden');
+                
+                if (q.type === 'sentence_builder') {
+                    this.setupSentenceBuilder(q);
+                } else {
+                    this.setupMultipleChoice(q);
+                }
+            }
+
+            setupMultipleChoice(q) {
+                this.sbContainer.classList.add('hidden');
+                this.mcContainer.classList.remove('hidden');
+                this.mcContainer.innerHTML = '';
+
+                q.options.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'w-full text-left p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-300 font-medium text-slate-800 btn-hover flex items-center justify-between group transition-all';
+                    btn.onclick = () => this.handleMCAnswer(opt, q);
+                    
+                    btn.innerHTML = `
+                        <span class="text-sm sm:text-base">${opt}</span>
+                        <div class="w-5 h-5 rounded-full border-2 border-slate-300 group-hover:border-indigo-600 flex items-center justify-center">
+                            <div class="w-2.5 h-2.5 rounded-full bg-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                    `;
+                    this.mcContainer.appendChild(btn);
+                });
+            }
+
+            setupSentenceBuilder(q) {
+                this.mcContainer.classList.add('hidden');
+                this.sbContainer.classList.remove('hidden');
+                this.submitSentenceBtn.disabled = false;
+                this.resetSentenceBtn.disabled = false;
+                
+                this.selectedWords = [];
+                this.renderSentenceBuilder(q);
+            }
+
+            renderSentenceBuilder(q) {
+                // Render Selected Words in Output Box
+                this.constructedBox.innerHTML = '';
+                if (this.selectedWords.length === 0) {
+                    this.constructedBox.appendChild(this.placeholderText);
+                    this.placeholderText.classList.remove('hidden');
+                } else {
+                    this.selectedWords.forEach((wordObj, idx) => {
+                        const chip = document.createElement('span');
+                        chip.className = 'word-chip bg-indigo-600 text-white font-medium px-3 py-1.5 rounded-lg text-sm shadow-sm flex items-center space-x-1';
+                        chip.innerHTML = `<span>${wordObj.text}</span> <i class="fa-solid fa-xmark text-xs opacity-75"></i>`;
+                        chip.onclick = () => {
+                            if (!this.isCurrentAnswered) {
+                                this.removeWordFromSentence(idx, q);
+                            }
+                        };
+                        this.constructedBox.appendChild(chip);
+                    });
+                }
+
+                // Render Available Chips in Pool
+                this.wordChipsPool.innerHTML = '';
+                q.words.forEach((wordText, originalIdx) => {
+                    const isUsed = this.selectedWords.some(item => item.id === originalIdx);
+                    if (!isUsed) {
+                        const poolChip = document.createElement('button');
+                        poolChip.className = 'word-chip bg-white border border-slate-300 hover:border-indigo-500 hover:bg-indigo-50 text-slate-800 font-medium px-3.5 py-2 rounded-xl text-sm shadow-sm';
+                        poolChip.textContent = wordText;
+                        poolChip.onclick = () => {
+                            if (!this.isCurrentAnswered) {
+                                this.addWordToSentence(wordText, originalIdx, q);
+                            }
+                        };
+                        this.wordChipsPool.appendChild(poolChip);
+                    }
+                });
+            }
+
+            addWordToSentence(wordText, originalIdx, q) {
+                this.selectedWords.push({ text: wordText, id: originalIdx });
+                this.renderSentenceBuilder(q);
+            }
+
+            removeWordFromSentence(indexInSelected, q) {
+                this.selectedWords.splice(indexInSelected, 1);
+                this.renderSentenceBuilder(q);
+            }
+
+            resetSentenceBuilder() {
+                if (this.isCurrentAnswered) return;
+                const q = quizQuestions[this.currentIndex];
+                this.selectedWords = [];
+                this.renderSentenceBuilder(q);
+            }
+
+            formatConstructedSentence() {
+                let formatted = "";
+                this.selectedWords.forEach((w, i) => {
+                    if (w.text === '.' || w.text === '?' || w.text === '!') {
+                        formatted = formatted.trim() + w.text;
+                    } else {
+                        formatted += (i === 0 ? '' : ' ') + w.text;
+                    }
+                });
+                return formatted.trim();
+            }
+
+            submitSentenceAnswer() {
+                if (this.isCurrentAnswered) return;
+                const q = quizQuestions[this.currentIndex];
+                const constructedText = this.formatConstructedSentence();
+                
+                this.submitSentenceBtn.disabled = true;
+                this.resetSentenceBtn.disabled = true;
+                this.evaluateAnswer(constructedText, q);
+            }
+
+            handleMCAnswer(selectedOpt, q) {
+                if (this.isCurrentAnswered) return;
+                const buttons = this.mcContainer.querySelectorAll('button');
+                buttons.forEach(btn => btn.disabled = true);
+
+                this.evaluateAnswer(selectedOpt, q);
+            }
+
+            evaluateAnswer(userAnswerStr, q) {
+                this.isCurrentAnswered = true;
+
+                // Normalize strings for reliable comparison
+                const normalize = (str) => str.replace(/\s+/g, ' ').trim();
+                const isCorrect = normalize(userAnswerStr) === normalize(q.correctAnswer);
+                
+                if (isCorrect) {
+                    this.score++;
+                    this.updateHeaderScore();
+                }
+
+                this.userAnswers.push({
+                    questionId: q.id,
+                    questionText: q.question,
+                    userAnswer: userAnswerStr || "(Keine Antwort)",
+                    correctAnswer: q.correctAnswer,
+                    isCorrect: isCorrect,
+                    explanation: q.explanation
+                });
+
+                // Highlight options if MC
+                if (!q.type || q.type !== 'sentence_builder') {
+                    const buttons = this.mcContainer.querySelectorAll('button');
+                    buttons.forEach(btn => {
+                        const text = btn.querySelector('span').textContent;
+                        if (text === q.correctAnswer) {
+                            btn.className = 'w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-semibold flex items-center justify-between';
+                        } else if (text === userAnswerStr && !isCorrect) {
+                            btn.className = 'w-full text-left p-4 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 font-semibold flex items-center justify-between';
+                        } else {
+                            btn.className = 'w-full text-left p-4 rounded-xl border border-slate-200 bg-slate-50 opacity-50';
+                        }
+                    });
+                }
+
+                // Show Feedback Panel
+                this.showFeedback(isCorrect, q);
+
+                // Show Next Button
+                if (this.currentIndex === quizQuestions.length - 1) {
+                    this.nextBtnText.textContent = "Ergebnis anzeigen";
+                } else {
+                    this.nextBtnText.textContent = "Nächste Frage";
+                }
+                this.nextBtn.classList.remove('hidden');
+            }
+
+            showFeedback(isCorrect, q) {
+                this.feedbackPanel.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'bg-rose-50', 'border-rose-200');
+                
+                if (isCorrect) {
+                    this.feedbackPanel.classList.add('bg-emerald-50', 'border-emerald-200');
+                    this.feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i>`;
+                    this.feedbackTitle.className = "font-bold text-sm text-emerald-900";
+                    this.feedbackTitle.textContent = "Richtig! Gut gemacht.";
+                } else {
+                    this.feedbackPanel.classList.add('bg-rose-50', 'border-rose-200');
+                    this.feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i>`;
+                    this.feedbackTitle.className = "font-bold text-sm text-rose-900";
+                    this.feedbackTitle.textContent = `Nicht ganz. Richtig ist: "${q.correctAnswer}"`;
+                }
+                
+                this.feedbackExplanation.textContent = q.explanation;
+            }
+
+            nextQuestion() {
+                this.currentIndex++;
+                if (this.currentIndex < quizQuestions.length) {
+                    this.loadQuestion();
+                } else {
+                    this.showResults();
+                }
+            }
+
+            showResults() {
+                this.quizScreen.classList.add('hidden');
+                this.resultScreen.classList.remove('hidden');
+
+                const total = quizQuestions.length;
+                const percentage = Math.round((this.score / total) * 100);
+
+                document.getElementById('final-score-text').textContent = `${this.score} / ${total}`;
+                document.getElementById('final-percentage-text').textContent = `${percentage}%`;
+
+                const iconContainer = document.getElementById('result-icon-container');
+                const title = document.getElementById('result-title');
+                const subtitle = document.getElementById('result-subtitle');
+
+                if (percentage >= 90) {
+                    iconContainer.className = "w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-3xl bg-emerald-100 text-emerald-600 shadow-inner";
+                    iconContainer.innerHTML = `<i class="fa-solid fa-trophy"></i>`;
+                    title.textContent = "Ausgezeichnet!";
+                    subtitle.textContent = "Hervorragende Leistung! Sie beherrschen die A1-Grundlagen von Kapitel 1 perfekt.";
+                } else if (percentage >= 70) {
+                    iconContainer.className = "w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-3xl bg-indigo-100 text-indigo-600 shadow-inner";
+                    iconContainer.innerHTML = `<i class="fa-solid fa-medal"></i>`;
+                    title.textContent = "Sehr gut!";
+                    subtitle.textContent = "Gute Arbeit! Sie haben die meisten Themen gut verstanden.";
+                } else if (percentage >= 50) {
+                    iconContainer.className = "w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-3xl bg-amber-100 text-amber-600 shadow-inner";
+                    iconContainer.innerHTML = `<i class="fa-solid fa-thumbs-up"></i>`;
+                    title.textContent = "Guter Versuch!";
+                    subtitle.textContent = "Sie sind auf dem richtigen Weg. Wiederholen Sie die fehlerhaften Aufgaben noch einmal.";
+                } else {
+                    iconContainer.className = "w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-3xl bg-rose-100 text-rose-600 shadow-inner";
+                    iconContainer.innerHTML = `<i class="fa-solid fa-book-open-reader"></i>`;
+                    title.textContent = "Weiter üben!";
+                    subtitle.textContent = "Das macht nichts! Wiederholen Sie Kapitel 1 und versuchen Sie es noch einmal.";
+                }
+
+                this.renderReviewList();
+            }
+
+            renderReviewList() {
+                const reviewList = document.getElementById('review-list');
+                reviewList.innerHTML = '';
+
+                this.userAnswers.forEach((ans, idx) => {
+                    const item = document.createElement('div');
+                    item.className = `p-4 rounded-xl border ${ans.isCorrect ? 'bg-slate-50 border-slate-200' : 'bg-rose-50/50 border-rose-200'}`;
+                    
+                    item.innerHTML = `
+                        <div class="flex items-start justify-between">
+                            <div class="space-y-1 pr-2">
+                                <span class="text-xs font-bold ${ans.isCorrect ? 'text-slate-500' : 'text-rose-600'}">Frage ${idx + 1}</span>
+                                <p class="text-sm font-semibold text-slate-900">${ans.questionText}</p>
+                                <div class="text-xs space-y-0.5 pt-1">
+                                    <p class="${ans.isCorrect ? 'text-emerald-700 font-medium' : 'text-rose-700 font-medium'}">
+                                        Ihre Antwort: <span class="font-bold">${ans.userAnswer}</span>
+                                    </p>
+                                    ${!ans.isCorrect ? `<p class="text-slate-600">Richtige Antwort: <span class="font-bold text-slate-800">${ans.correctAnswer}</span></p>` : ''}
+                                </div>
+                            </div>
+                            <div class="text-lg">
+                                ${ans.isCorrect ? '<i class="fa-solid fa-circle-check text-emerald-500"></i>' : '<i class="fa-solid fa-circle-xmark text-rose-500"></i>'}
+                            </div>
+                        </div>
+                    `;
+                    reviewList.appendChild(item);
+                });
+            }
+        }
+
+        // Initialize App Instance
+        let quizApp;
+        window.addEventListener('DOMContentLoaded', () => {
+            quizApp = new QuizApp();
+        });
+    </script>
+</body>
+</html>
