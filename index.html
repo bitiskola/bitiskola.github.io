@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Launcher</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Makes the website non-scrollable */
+            background-color: #0d0f12; /* Deep dark background */
+            background-image: radial-gradient(circle at 50% 50%, #161920 0%, #0d0f12 75%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #e0e6ed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Launcher Container */
+        .launcher {
+            display: flex;
+            gap: 50px;
+            padding: 35px 50px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 28px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Individual App Item */
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #8b949e;
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.3s ease;
+            width: 100px;
+        }
+
+        /* Icon Styling */
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: #161b22;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .icon-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        /* App Title */
+        .app-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            white-space: nowrap;
+        }
+
+        /* Shiny Light Beneath App */
+        .shiny-light {
+            width: 16px;
+            height: 4px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Hover Effects */
+        .app-item:hover {
+            transform: translateY(-6px);
+            color: #ffffff;
+        }
+
+        .app-item:hover .icon-wrapper {
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            background: #1f2630;
+        }
+
+        .app-item:hover .icon-wrapper img {
+            transform: scale(1.06);
+        }
+
+        /* Light brightens up on hover */
+        .app-item:hover .shiny-light {
+            width: 36px;
+            background-color: #ffffff;
+            box-shadow: 
+                0 0 10px #ffffff,
+                0 0 20px rgba(255, 255, 255, 0.8),
+                0 0 35px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 600px) {
+            .launcher {
+                gap: 25px;
+                padding: 25px 30px;
+            }
+            .icon-wrapper {
+                width: 64px;
+                height: 64px;
+            }
+            .app-item {
+                width: 80px;
+            }
+            .app-title {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="launcher">
+        <!-- bmux -->
+        <a href="https://bitiskola.github.io/bmux" class="app-item">
+            <div class="icon-wrapper">
+                <img src="https://bitiskola.github.io/assets/bmux.png" alt="bmux">
+            </div>
+            <span class="app-title">bmux</span>
+            <div class="shiny-light"></div>
+        </a>
+
+        <!-- BIT Typing -->
+        <a href="https://bitiskola.github.io/bit-typing" class="app-item">
+            <div class="icon-wrapper">
+                <img src="https://bitiskola.github.io/assets/bit-typing.png" alt="BIT Typing">
+            </div>
+            <span class="app-title">BIT Typing</span>
+            <div class="shiny-light"></div>
+        </a>
+
+        <!-- Prism browser -->
+        <a href="https://github.com/bitiskola/prism-browser" class="app-item">
+            <div class="icon-wrapper">
+                <img src="https://bitiskola.github.io/assets/prism-browser.png" alt="Prism browser">
+            </div>
+            <span class="app-title">Prism browser</span>
+            <div class="shiny-light"></div>
+        </a>
+    </div>
+
+</body>
+</html>

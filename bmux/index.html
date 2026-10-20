@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[bmux] — Terminal multiplexing that fits your workflow</title>
+  <meta name="description" content="A sleek desktop workspace for your terminal sessions. Split views, manage tmux workspaces, and customize your environment.">
+  <link rel="icon" type="image/png" href="https://bitiskola.github.io/assets/bmux.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0d10;
+      --bg-elevated: #14161c;
+      --bg-card: #1a1d25;
+      --bg-hover: #22262f;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text: #f0f2f5;
+      --text-secondary: #9ba3b2;
+      --text-muted: #6b7380;
+      --accent: #5b8def;
+      --accent-soft: rgba(91, 141, 239, 0.15);
+      --accent-hover: #7aa3f5;
+      --success: #3ecf8e;
+      --warning: #f5a524;
+      --warning-soft: rgba(245, 165, 36, 0.12);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      --transition: 0.2s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(12, 13, 16, 0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: color var(--transition), background var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: var(--bg-hover);
+    }
+
+    .hero {
+      padding: 96px 0 72px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #7aa3f5, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition);
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(91, 141, 239, 0.3);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(91, 141, 239, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .platform-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    .screenshots {
+      padding: 24px 0 80px;
+    }
+
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .screenshot-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .screenshot-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .screenshot-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .screenshot-label {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .features {
+      padding: 80px 0;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 48px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color var(--transition);
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-strong);
+    }
+
+    .feature-num {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 16px;
+      letter-spacing: 0.04em;
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .download {
+      padding: 80px 0;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 720px;
+    }
+
+    .download-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .download-card.available:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .download-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .download-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .download-icon svg {
+      width: 22px;
+      height: 22px;
+      color: var(--text-secondary);
+    }
+
+    .download-info h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .download-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .download-card .btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: auto;
+    }
+
+    .team {
+      padding: 80px 0;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 640px;
+    }
+
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: border-color var(--transition);
+    }
+
+    .team-card:hover {
+      border-color: var(--border-strong);
+    }
+
+    .team-card img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .team-info h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .team-info p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    footer {
+      padding: 40px 0 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-left img {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      opacity: 0.7;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 20px;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      padding: 24px 28px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-header h2 .warning-icon {
+      color: var(--warning);
+      flex-shrink: 0;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      transition: color var(--transition), background var(--transition);
+      line-height: 0;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+      background: var(--bg-hover);
+    }
+
+    .modal-close svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .modal-body {
+      padding: 20px 28px 28px;
+    }
+
+    .modal-warning-box {
+      background: var(--warning-soft);
+      border: 1px solid rgba(245, 165, 36, 0.25);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .modal-warning-box strong {
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .modal-body p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.65;
+    }
+
+    .modal-body p:last-of-type {
+      margin-bottom: 20px;
+    }
+
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-strong);
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      position: relative;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .checkbox-row input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .checkbox-row input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 6px;
+      height: 11px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .checkbox-row span {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .modal-actions .btn {
+      min-width: 140px;
+      justify-content: center;
+    }
+
+    @media (max-width: 900px) {
+      .screenshot-grid,
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .download-grid,
+      .team-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+      }
+
+      .hero {
+        padding: 72px 0 48px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-cta {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn {
+        justify-content: center;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .modal {
+        max-height: 95vh;
+      }
+
+      .modal-header,
+      .modal-body {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+      }
+
+      .modal-actions .btn {
+        width: 100%;
+      }
+    }
+
+    .os-win-linux { display: none; }
+    .os-macos { display: none; }
+    body.show-win-linux .os-win-linux { display: block; }
+    body.show-macos .os-macos { display: block; }
+    body.show-win-linux .screenshot-grid.os-win-linux { display: grid; }
+    body.show-macos .screenshot-grid.os-macos { display: grid; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <img src="https://bitiskola.github.io/assets/bmux.png" alt="[bmux]">
+        [bmux]
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#team">Team</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">Desktop app · Free & open source</div>
+        <h1>Terminal multiplexing<br><span>made effortless</span></h1>
+        <p class="hero-desc">
+          A modern workspace to manage your terminal sessions. Split views effortlessly, organize your tmux workspaces, and customize every detail of your command-line environment.
+        </p>
+        <div class="hero-cta">
+          <a href="#download" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </a>
+          <a href="https://github.com/micr0softstore/bmux_rust" target="_blank" rel="noopener" class="btn btn-secondary os-win-linux">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="https://github.com/imbencetsx/bmux" target="_blank" rel="noopener" class="btn btn-secondary os-macos">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+        <p class="platform-note">Windows, Linux &amp; macOS available</p>
+      </div>
+    </section>
+
+    <section class="screenshots">
+      <div class="container">
+        <div class="screenshot-grid os-win-linux">
+          <div class="screenshot-card">
+            <img src="https://bitiskola.github.io/bmux/src/screenshots/01_bash.png" alt="Split terminal workspace" loading="lazy">
+            <div class="screenshot-label">Split Terminal Workspace</div>
+          </div>
+          <div class="screenshot-card">
+            <img src="https://bitiskola.github.io/bmux/src/screenshots/02_setting.png" alt="Settings page" loading="lazy">
+            <div class="screenshot-label">Settings</div>
+          </div>
+          <div class="screenshot-card">
+            <img src="https://bitiskola.github.io/bmux/src/screenshots/03_tmux.png" alt="tmux workspace" loading="lazy">
+            <div class="screenshot-label">tmux Workspace</div>
+          </div>
+        </div>
+
+        <div class="screenshot-grid os-macos">
+          <div class="screenshot-card">
+            <img src="https://bitiskola.github.io/bmux/src/screenshots/01_bash_macos.png" alt="Split terminal workspace (macOS)" loading="lazy">
+            <div class="screenshot-label">Split Terminal Workspace</div>
+          </div>
+          <div class="screenshot-card">
+            <img src="https://bitiskola.github.io/bmux/src/screenshots/02_settings_macos.png" alt="Settings page (macOS)" loading="lazy">
+            <div class="screenshot-label">Settings</div>
+          </div>
+          <div class="screenshot-card">
+            <img src="https://bitiskola.github.io/bmux/src/screenshots/03_tmux_macos.png" alt="tmux workspace (macOS)" loading="lazy">
+            <div class="screenshot-label">tmux Workspace</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">Built for terminal productivity</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-num">01 / WORKSPACE</div>
+            <h3>Split terminal views</h3>
+            <p>Divide your workspace into multiple bash panes side-by-side. Run, monitor, and interact with several processes at once without losing focus.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-num">02 / MULTIPLEXING</div>
+            <h3>Seamless tmux integration</h3>
+            <p>Manage and navigate dedicated tmux workspaces effortlessly. Keep your persistent sessions organized, accessible, and easy to control.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-num">03 / CUSTOMIZE</div>
+            <h3>Tailored settings</h3>
+            <p>Configure your terminal environment through a clean settings interface. Adjust appearance, keybindings, and shell preferences to fit your workflow.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="download" id="download">
+      <div class="container">
+        <div class="section-label">Download</div>
+        <h2 class="section-title">Get [bmux]</h2>
+        <div class="download-grid">
+          <div class="download-card available">
+            <div class="download-header">
+              <div class="download-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/><path d="M12 18v2"/></svg>
+              </div>
+              <div class="download-info">
+                <h3>Windows</h3>
+                <p>64-bit · x64 · .exe installer (v1.2.5)</p>
+              </div>
+            </div>
+            <a href="https://github.com/micr0softstore/bmux_rust/releases/download/v1.2.5/bmux-1.2.5-windows-x86_64-setup.exe" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download for Windows
+            </a>
+          </div>
+
+          <div class="download-card available">
+            <div class="download-header">
+              <div class="download-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.5 2.5-1.5 3.5L12 12l-2.5-2.5C8.5 8.5 8 7.5 8 6a4 4 0 0 1 4-4z"/><path d="M8 14c-2 1-3 3-3 5v1h14v-1c0-2-1-4-3-5"/><path d="M9 20v2"/><path d="M15 20v2"/></svg>
+              </div>
+              <div class="download-info">
+                <h3>Linux</h3>
+                <p>Debian / Ubuntu · x64 · .deb (v1.2.5)</p>
+              </div>
+            </div>
+            <a href="https://github.com/micr0softstore/bmux_rust/releases/download/v1.2.5/bmux_1.2.5-1_amd64.deb" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download for Linux
+            </a>
+          </div>
+
+          <div class="download-card available">
+            <div class="download-header">
+              <div class="download-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1.5 0 2.5.5 3.5 1.5S17 7 17 9c0 2-1 3.5-2 4.5L12 17l-3-3.5C8 12.5 7 11 7 9c0-2 .5-3.5 1.5-4.5S10.5 3 12 3z"/><path d="M9 18h6"/><path d="M10 21h4"/></svg>
+              </div>
+              <div class="download-info">
+                <h3>macOS · Apple Silicon</h3>
+                <p>arm64 · .dmg (v1.3.0)</p>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary macos-download-btn" data-url="https://github.com/imbencetsx/bmux/releases/download/1.3.0/bmux-1.3.0-macos-arm64.dmg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download for macOS (Apple Silicon)
+            </button>
+          </div>
+
+          <div class="download-card">
+            <div class="download-header">
+              <div class="download-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1.5 0 2.5.5 3.5 1.5S17 7 17 9c0 2-1 3.5-2 4.5L12 17l-3-3.5C8 12.5 7 11 7 9c0-2 .5-3.5 1.5-4.5S10.5 3 12 3z"/><path d="M9 18h6"/><path d="M10 21h4"/></svg>
+              </div>
+              <div class="download-info">
+                <h3>macOS · Intel</h3>
+                <p>x64 · Unavailable</p>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" disabled>
+              Unavailable for macOS (Intel)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="team" id="team">
+      <div class="container">
+        <div class="section-label">Team</div>
+        <h2 class="section-title">Who builds it</h2>
+        <div class="team-grid">
+          <div class="team-card">
+            <img src="https://bitiskola.github.io/bit-typing/src/assets/micr0softstore.png" alt="micr0softstore">
+            <div class="team-info">
+              <h3>micr0softstore</h3>
+              <p>Developer · Windows &amp; Linux</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <img src="https://bitiskola.github.io/bit-typing/src/assets/cacto.tsx.png" alt="cacto.tsx">
+            <div class="team-info">
+              <h3>cacto.tsx</h3>
+              <p>Lead Developer, Icon designer &amp; · macOS</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <img src="https://bitiskola.github.io/assets/bmux.png" alt="">
+        <span>[bmux] · v1.3.0 / v1.2.5</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/micr0softstore/bmux_rust" target="_blank" rel="noopener">GitHub — Rust</a>
+        <a href="https://github.com/imbencetsx/bmux" target="_blank" rel="noopener">GitHub — Swift</a>
+        <a href="https://github.com/micr0softstore/bmux_rust/releases" target="_blank" rel="noopener">Releases — Rust</a>
+        <a href="https://github.com/imbencetsx/bmux/releases" target="_blank" rel="noopener">Releases — Swift</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- macOS download warning modal -->
+  <div class="modal-overlay" id="macos-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">
+          <svg class="warning-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Important: macOS security step required
+        </h2>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-warning-box">
+          <strong>The app will not open normally after download.</strong>
+          You must verify it once through Terminal before the first launch.
+        </div>
+
+        <p>
+          macOS Gatekeeper blocks apps that are not signed and notarized by Apple. [bmux] is an independent open-source project, so the macOS builds are not notarized yet. This is a normal protection — not a problem with the app itself.
+        </p>
+        <p>
+          After downloading, you need to remove the quarantine attribute using Terminal. The short video below walks you through the exact steps.
+        </p>
+
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/6Vto-3kvoxo?si=h5EWpTwTk3aTi-bt"
+            title="YouTube video player — how to open [bmux] on macOS"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="modal-checkbox">
+          <span>I have watched the tutorial and understand that I need to verify the app through Terminal before it will launch.</span>
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="modal-cancel">Cancel</button>
+          <button type="button" class="btn btn-primary" id="modal-continue" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Continue to download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const ua = navigator.userAgent.toLowerCase();
+      const platform = (navigator.userAgentData?.platform || navigator.platform || '').toLowerCase();
+      const isMac = /mac|iphone|ipad|ipod/.test(platform) || /macintosh|mac os x/.test(ua);
+
+      if (isMac) {
+        document.body.classList.add('show-macos');
+      } else {
+        document.body.classList.add('show-win-linux');
+      }
+
+      const modal = document.getElementById('macos-modal');
+      const checkbox = document.getElementById('modal-checkbox');
+      const continueBtn = document.getElementById('modal-continue');
+      const closeBtn = document.getElementById('modal-close');
+      const cancelBtn = document.getElementById('modal-cancel');
+      let pendingUrl = null;
+
+      function openModal(url) {
+        pendingUrl = url;
+        checkbox.checked = false;
+        continueBtn.disabled = true;
+        modal.classList.add('open');
+        document.body.classList.add('modal-open');
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+        document.body.classList.remove('modal-open');
+        pendingUrl = null;
+        const iframe = modal.querySelector('iframe');
+        if (iframe) {
+          const src = iframe.src;
+          iframe.src = src;
+        }
+      }
+
+      document.querySelectorAll('.macos-download-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          openModal(btn.getAttribute('data-url'));
+        });
+      });
+
+      checkbox.addEventListener('change', function () {
+        continueBtn.disabled = !checkbox.checked;
+      });
+
+      continueBtn.addEventListener('click', function () {
+        if (checkbox.checked && pendingUrl) {
+          const url = pendingUrl;
+          closeModal();
+          window.location.href = url;
+        }
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
