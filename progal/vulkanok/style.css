@@ -1,0 +1,24 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+img{
+    display: block;
+    margin: auto;
+}
+body{
+    background-color: #140608;
+}
+div{
+    padding: 10px;
+}
+span{
+    display: block;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 60px;
+    font-weight: bold;
+    letter-spacing: 20px;
+    color: #ff6a00;
+    text-shadow: 3px 3px #ffd23f;
+}
